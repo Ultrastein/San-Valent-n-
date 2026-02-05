@@ -12,33 +12,33 @@
             justify-content: center;
             align-items: center;
             height: 100vh;
-            background-color: #ffe6e6; /* Fondo rosita inicial */
+            /* CAMBIO: Fondo azul hielo para la temática frío */
+            background-color: #e3f2fd; 
             font-family: 'Arial', sans-serif;
-            overflow: hidden; /* Importante para que no salgan barras de scroll con los emojis */
+            overflow: hidden;
             transition: background-color 0.5s ease;
         }
 
-        /* Contenedor principal de la tarjeta */
         .container {
             text-align: center;
             background: white;
             padding: 40px;
             border-radius: 20px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            /* Sombra azulada */
+            box-shadow: 0 10px 25px rgba(0, 150, 255, 0.2); 
             position: relative;
-            z-index: 10; /* Asegura que la tarjeta esté por encima al principio */
+            z-index: 10;
             transition: opacity 0.5s ease, transform 0.5s ease;
         }
 
-        /* Clase para ocultar la tarjeta dramáticamente */
         .container.drama-mode {
             opacity: 0;
             transform: scale(0.8);
-            pointer-events: none; /* Evita clicks cuando se está ocultando */
+            pointer-events: none;
         }
 
         h1 {
-            color: #ff4d4d;
+            color: #0277bd; /* Azul fuerte para el título */
             font-size: 2.5rem;
             margin-bottom: 20px;
         }
@@ -58,26 +58,24 @@
         }
 
         #btnSi {
-            background-color: #ff4d4d;
+            background-color: #0288d1; /* Azul botón */
             color: white;
             font-weight: bold;
-            box-shadow: 0 4px 15px rgba(255, 77, 77, 0.4);
+            box-shadow: 0 4px 15px rgba(2, 136, 209, 0.4);
         }
 
         #btnSi:hover {
             transform: scale(1.1);
-            background-color: #ff3333;
+            background-color: #01579b;
         }
 
-        /* Estilos cruciales para el botón NO */
         #btnNo {
-            background-color: #e0e0e0;
-            color: #555;
-            position: fixed; /* Usamos fixed para moverlo libremente por toda la pantalla */
+            background-color: #cfd8dc;
+            color: #546e7a;
+            position: fixed; /* Fixed para mover libremente */
             font-weight: bold;
-            z-index: 20; /* Siempre por encima de todo hasta que desaparece */
-            /* Transición suave para el movimiento */
-            transition: top 0.4s ease-out, left 0.4s ease-out, background-color 0.2s;
+            z-index: 20;
+            transition: top 0.4s ease-out, left 0.4s ease-out;
         }
 
         .hidden {
@@ -86,22 +84,24 @@
 
         #mensajeFinal {
             font-size: 1.8rem;
-            color: #ff4d4d;
+            color: #0277bd;
             font-weight: bold;
+            z-index: 30; /* Asegurar que se vea sobre la nieve */
+            position: relative;
         }
 
-        /* ESTILOS PARA LA LLUVIA DE EMOJIS */
-        .emoji-llorando {
+        /* ESTILOS PARA LA LLUVIA (Sirve para nieve y patines) */
+        .emoji-caida {
             position: fixed;
-            top: -50px; /* Empiezan fuera de la pantalla arriba */
-            z-index: 5; /* Detrás de la tarjeta si estuviera visible */
-            pointer-events: none; /* Que no interfieran con el mouse */
+            top: -50px;
+            z-index: 5;
+            pointer-events: none;
             animation: caer linear forwards;
         }
 
         @keyframes caer {
             0% { transform: translateY(0) rotate(0deg); opacity: 1; }
-            100% { transform: translateY(110vh) rotate(360deg); opacity: 0.5; }
+            100% { transform: translateY(110vh) rotate(360deg); opacity: 0.8; }
         }
 
     </style>
@@ -109,7 +109,7 @@
 <body>
 
     <div class="container" id="mainContainer">
-        <h1 id="pregunta">¿Quieres ser mi San Valentín?</h1>
+        <h1 id="pregunta">¿Quieres ser mi San Valentín? ❄️</h1>
         
         <div class="buttons">
             <button id="btnSi">¡SÍ!</button>
@@ -117,7 +117,7 @@
         </div>
 
         <div id="mensajeFinal" class="hidden">
-            ¡Yo sabía que no te ibas a poder negar! ❤️
+            ¡Sabía que no te ibas a negar! 💙⛸️
         </div>
     </div>
 
@@ -129,152 +129,98 @@
         const mensajeFinal = document.getElementById('mensajeFinal');
         const mainContainer = document.getElementById('mainContainer');
 
-        // La secuencia exacta que pediste más variantes del mismo estilo
         const frases = [
-            "¿Por qué no quieres? 🥺",
-            "Y yo q te quiero tanto... 💔",
-            "¿Es por alguien más? 😭",
-            "¡Me vas a hacer llorar! 😢",
-            "¡Dale, di que sí por favor! 🌹"
+            "¿Por qué no quieres? 🥶",
+            "Hace mucho frío sin ti... ❄️",
+            "¿Me vas a dejar congelado? 🧊",
+            "¡No seas fría/o! 😭",
+            "¡Dale, di que sí! ⛸️"
         ];
 
         let contador = 0;
-        let dramaActivado = false;
+        let dramaActivado = false; // Variable global para controlar el estado
 
         // --- LÓGICA DEL BOTÓN NO ---
         btnNo.addEventListener('mouseover', function() {
-            if (dramaActivado) return; // Si ya hay drama, no hacer nada más
+            if (dramaActivado) return; 
 
-            // Si el contador es menor que la cantidad de frases, seguimos la secuencia
             if (contador < frases.length) {
                 btnNo.innerText = frases[contador];
                 contador++;
                 moverBoton();
-            } 
-            // Si ya se acabaron las frases y vuelven a intentarlo: ¡DRAMA!
-            else {
+            } else {
                 activarModoDrama();
             }
         });
 
         function moverBoton() {
-            // Aseguramos que el botón ahora sea fixed para moverse libremente
             btnNo.style.position = 'fixed';
-
-            // Cálculos para que no se salga de la pantalla
             const maxX = window.innerWidth - btnNo.offsetWidth - 20;
             const maxY = window.innerHeight - btnNo.offsetHeight - 20;
-            
             const newX = Math.random() * maxX;
             const newY = Math.random() * maxY;
-
             btnNo.style.left = newX + 'px';
             btnNo.style.top = newY + 'px';
         }
 
         function activarModoDrama() {
             dramaActivado = true;
-            // Ocultamos el botón NO para que dejen de intentarlo
             btnNo.style.display = 'none';
-            
-            // Ocultamos la tarjeta principal
             mainContainer.classList.add('drama-mode');
-
-            // Cambiamos el fondo a gris triste
-            document.body.style.backgroundColor = "#555";
-
-            // Iniciamos la lluvia de emojis
-            crearLluviaDeEmojis();
-        }
-
-        function crearLluviaDeEmojis() {
-            // Creamos 150 emojis
-            for (let i = 0; i < 150; i++) {
-                const emoji = document.createElement('div');
-                emoji.innerText = '😭';
-                emoji.classList.add('emoji-llorando');
-                
-                // Posición horizontal aleatoria
-                emoji.style.left = Math.random() * 100 + 'vw';
-                
-                // Tamaño aleatorio entre 20px y 60px
-                const size = Math.random() * 40 + 20;
-                emoji.style.fontSize = size + 'px';
-                
-                // Velocidad de caída aleatoria (entre 2s y 6s)
-                const duration = Math.random() * 4 + 2;
-                emoji.style.animationDuration = duration + 's';
-                
-                // Retraso aleatorio para que no caigan todos de golpe
-                emoji.style.animationDelay = Math.random() * 3 + 's';
-
-                document.body.appendChild(emoji);
-            }
-        }
-        function crearLluviaDeEmojisPos() {
-            // Creamos 150 emojis
-            for (let i = 0; i < 150; i++) {
-                const emoji = document.createElement('div');
-                emoji.innerText = '😁😍🥰💖🎊🎉';
-                emoji.classList.add('emoji-llorando');
-                
-                // Posición horizontal aleatoria
-                emoji.style.left = Math.random() * 100 + 'vw';
-                
-                // Tamaño aleatorio entre 20px y 60px
-                const size = Math.random() * 40 + 20;
-                emoji.style.fontSize = size + 'px';
-                
-                // Velocidad de caída aleatoria (entre 2s y 6s)
-                const duration = Math.random() * 4 + 2;
-                emoji.style.animationDuration = duration + 's';
-                
-                // Retraso aleatorio para que no caigan todos de golpe
-                emoji.style.animationDelay = Math.random() * 3 + 's';
-
-                document.body.appendChild(emoji);
-            }
+            document.body.style.backgroundColor = "#37474f"; // Gris azulado oscuro y triste
+            
+            // Lluvia de tristeza
+            crearLluvia(['😭', '💔', '🥶']); 
         }
 
         // --- LÓGICA DEL BOTÓN SÍ ---
         btnSi.addEventListener('click', function() {
-            if (dramaActivado) return; // Si está en modo drama, no funciona el sí
+            if (dramaActivado) return;
 
+            // Ocultamos botones y pregunta
             pregunta.style.display = 'none';
             buttonsDiv.style.display = 'none';
+            
+            // Mostramos mensaje final
             mensajeFinal.classList.remove('hidden');
             
-            // Fondo de celebración
-            document.body.style.backgroundColor = "#ffcce0";
-            
-            // Efecto de confeti simple (opcional, usando emojis)
-            lanzarConfeti();
+            // Activamos la temática feliz de INVIERNO
+            dramaActivado = true; // Bloqueamos el botón No por si acaso
+            btnNo.style.display = 'none';
+
+            // Ocultamos la tarjeta blanca (opcional, si quieres que se vea solo el texto sobre el fondo)
+            // Si prefieres que se vea la tarjeta, comenta la linea de abajo:
+            // mainContainer.classList.add('drama-mode'); 
+
+            // Fondo azul cielo brillante
+            document.body.style.backgroundColor = "#b3e5fc";
+
+            // ¡Aquí está la nieve y los patines!
+            crearLluvia(['❄️', '⛸️', '💙', '🤍']); 
         });
 
-        function lanzarConfeti() {
-             for (let i = 0; i < 50; i++) {
-                const confeti = document.createElement('div');
-                confeti.innerText = ['❤️', '💖', '🌹', '🎉'][Math.floor(Math.random()*4)];
-                confeti.classList.add('emoji-llorando'); // Reusamos la clase de caer
-                confeti.style.left = Math.random() * 100 + 'vw';
-                confeti.style.fontSize = (Math.random() * 20 + 10) + 'px';
-                confeti.style.animationDuration = (Math.random() * 2 + 1) + 's';
-                document.body.appendChild(confeti);
+        // Función genérica para crear lluvia de emojis
+        function crearLluvia(emojisArray) {
+            for (let i = 0; i < 150; i++) {
+                const elemento = document.createElement('div');
                 
-             }
-            felizActivado = true;
-            // Ocultamos el botón NO para que dejen de intentarlo
-            btnNo.style.display = 'none';
-            btnSi.style.display = 'none';
-            
-            // Ocultamos la tarjeta principal
-            mainContainer.classList.add('drama-mode');
+                // Elige un emoji al azar del array que le pasamos
+                elemento.innerText = emojisArray[Math.floor(Math.random() * emojisArray.length)];
+                
+                elemento.classList.add('emoji-caida');
+                
+                // Posición y tamaño aleatorio
+                elemento.style.left = Math.random() * 100 + 'vw';
+                const size = Math.random() * 40 + 20;
+                elemento.style.fontSize = size + 'px';
+                
+                // Velocidad
+                const duration = Math.random() * 3 + 2;
+                elemento.style.animationDuration = duration + 's';
+                elemento.style.animationDelay = Math.random() * 3 + 's';
 
-            // Cambiamos el fondo a gris triste
-            document.body.style.backgroundColor = "#555";
-
-            // Iniciamos la lluvia de emojis
-            crearLluviaDeEmojisPos();
+                document.body.appendChild(elemento);
+            }
         }
     </script>
 </body>
