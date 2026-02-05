@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>¿Quieres ser mi San Valentín?</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #ffe6e6; /* Fondo rosita suave */
+            font-family: 'Arial', sans-serif;
+            overflow: hidden; /* Para que el botón no cause scroll bars */
+        }
+
+        .container {
+            text-align: center;
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            max-width: 90%;
+            position: relative;
+        }
+
+        h1 {
+            color: #ff4d4d;
+            margin-bottom: 30px;
+            font-size: 2.5rem;
+        }
+
+        .buttons {
+            margin-top: 30px;
+            /* Necesario para posicionamiento relativo del botón NO */
+            position: static; 
+        }
+
+        button {
+            font-size: 1.2rem;
+            padding: 15px 30px;
+            margin: 10px;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        #btnSi {
+            background-color: #ff4d4d;
+            color: white;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(255, 77, 77, 0.4);
+        }
+
+        #btnSi:hover {
+            transform: scale(1.1);
+            background-color: #ff3333;
+        }
+
+        #btnNo {
+            background-color: #e0e0e0;
+            color: #555;
+            position: absolute; /* Clave para poder moverlo libremente */
+            font-weight: bold;
+            transition: top 0.3s ease, left 0.3s ease; /* Movimiento suave */
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        /* Estilo para el mensaje final */
+        #mensajeFinal {
+            font-size: 2rem;
+            color: #ff4d4d;
+            font-weight: bold;
+            animation: fadeIn 1s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1 id="pregunta">¿Quieres ser mi San Valentín?</h1>
+        
+        <div class="buttons">
+            <button id="btnSi">¡SÍ!</button>
+            <button id="btnNo">No</button>
+        </div>
+
+        <div id="mensajeFinal" class="hidden">
+            Yo sabía que no te ibas a poder negar ❤️
+        </div>
+    </div>
+
+    <script>
+        const btnNo = document.getElementById('btnNo');
+        const btnSi = document.getElementById('btnSi');
+        const pregunta = document.getElementById('pregunta');
+        const botonesDiv = document.querySelector('.buttons');
+        const mensajeFinal = document.getElementById('mensajeFinal');
+
+        // Mensajes secuenciales para el botón NO
+        const frases = [
+            "¿Por qué no quieres? 🥺",
+            "Y yo que te quiero tanto... 💔",
+            "¡No me hagas esto! 😭",
+            "Piénsalo bien... 🤔",
+            "¡Dale, di que sí! 🌹"
+        ];
+
+        let contador = 0;
+
+        // Lógica del botón NO
+        btnNo.addEventListener('mouseover', function() {
+            // 1. Cambiar el texto según la secuencia
+            if (contador < frases.length) {
+                btnNo.innerText = frases[contador];
+                contador++;
+            } else {
+                // Si se acaban las frases, repite la última o vuelve al inicio
+                btnNo.innerText = frases[frases.length - 1]; 
+            }
+
+            // 2. Mover el botón a una posición aleatoria
+            // Calculamos el ancho y alto visible de la ventana
+            const windowWidth = window.innerWidth;
+            const windowHeight = window.innerHeight;
+
+            // Tamaño del botón
+            const btnWidth = btnNo.offsetWidth;
+            const btnHeight = btnNo.offsetHeight;
+
+            // Generar nueva posición X e Y, asegurando que no se salga de la pantalla
+            // Dejamos un margen de 50px
+            const newX = Math.random() * (windowWidth - btnWidth - 100) + 50;
+            const newY = Math.random() * (windowHeight - btnHeight - 100) + 50;
+
+            btnNo.style.position = "fixed"; // Asegura que se mueva respecto a la ventana
+            btnNo.style.left = newX + "px";
+            btnNo.style.top = newY + "px";
+        });
+
+        // Lógica del botón SÍ
+        btnSi.addEventListener('click', function() {
+            // Ocultar la pregunta y los botones
+            pregunta.style.display = 'none';
+            btnSi.style.display = 'none';
+            btnNo.style.display = 'none';
+            
+            // Mostrar el mensaje final
+            mensajeFinal.classList.remove('hidden');
+            
+            // Opcional: Lanzar confeti o cambiar fondo (simple cambio de color aquí)
+            document.body.style.backgroundColor = "#ffcccc";
+        });
+    </script>
+</body>
+</html>
+
