@@ -211,6 +211,30 @@
                 document.body.appendChild(emoji);
             }
         }
+        function crearLluviaDeEmojisPos() {
+            // Creamos 150 emojis
+            for (let i = 0; i < 150; i++) {
+                const emoji = document.createElement('div');
+                emoji.innerText = '😁😍🥰💖🎊🎉';
+                emoji.classList.add('emoji-llorando');
+                
+                // Posición horizontal aleatoria
+                emoji.style.left = Math.random() * 100 + 'vw';
+                
+                // Tamaño aleatorio entre 20px y 60px
+                const size = Math.random() * 40 + 20;
+                emoji.style.fontSize = size + 'px';
+                
+                // Velocidad de caída aleatoria (entre 2s y 6s)
+                const duration = Math.random() * 4 + 2;
+                emoji.style.animationDuration = duration + 's';
+                
+                // Retraso aleatorio para que no caigan todos de golpe
+                emoji.style.animationDelay = Math.random() * 3 + 's';
+
+                document.body.appendChild(emoji);
+            }
+        }
 
         // --- LÓGICA DEL BOTÓN SÍ ---
         btnSi.addEventListener('click', function() {
@@ -236,7 +260,21 @@
                 confeti.style.fontSize = (Math.random() * 20 + 10) + 'px';
                 confeti.style.animationDuration = (Math.random() * 2 + 1) + 's';
                 document.body.appendChild(confeti);
+                
              }
+            felizActivado = true;
+            // Ocultamos el botón NO para que dejen de intentarlo
+            btnNo.style.display = 'none';
+            btnSi.style.display = 'none';
+            
+            // Ocultamos la tarjeta principal
+            mainContainer.classList.add('drama-mode');
+
+            // Cambiamos el fondo a gris triste
+            document.body.style.backgroundColor = "#555";
+
+            // Iniciamos la lluvia de emojis
+            crearLluviaDeEmojisPos();
         }
     </script>
 </body>
